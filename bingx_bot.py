@@ -11,9 +11,11 @@ BASE_URL = "https://open-api.bingx.com"
 SYMBOL = "ADA-USDT"
 
 def sign(params):
-    query = '&'.join([f"{k}={params[k]}" for k in sorted(params)])
+    sorted_params = sorted(params.items())
+    query = '&'.join(f"{k}={v}" for k, v in sorted_params)
     signature = hmac.new(API_SECRET.encode(), query.encode(), hashlib.sha256).hexdigest()
     return signature
+
 
 def place_order(side):
     endpoint = '/openApi/swap/v2/trade/order'
