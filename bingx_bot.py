@@ -24,24 +24,35 @@ def place_order(side):
     url = BASE_URL + endpoint
 
     timestamp = str(int(time.time() * 1000))
+
     params = {
-        'apiKey': API_KEY,
-        'symbol': SYMBOL,
-        'side': side.upper(),
-        'positionSide': 'LONG' if side == 'buy' else 'SHORT',
-        'type': 'MARKET',
-        'quantity': 50,
-        'timestamp': timestamp
+        "apikey": API_KEY,
+        "symbol": SYMBOL,
+        "side": side.upper(),
+        "positionSide": "LONG" if side == "buy" else "SHORT",
+        "type": "MARKET",
+        "quantity": 50,
+        "timestamp": timestamp
     }
 
-    params['signature'] = sign(params, API_SECRET)
+    # Sortarea parametrilor (obligatorie pentru semnătură)
+    sorted_params = dict(sorted(params.items()))
+    query_string = "&".join(f"{k}={v}" for k, v in sorted_params.items())
+
+    signature = hmac.new(
+        API_SECRET.encode('utf-8'),
+        query_string.encode('utf-8'),
+        hashlib.sha256
+    ).hexdigest()
 
     headers = {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'X-BX-APIKEY': API_KEY
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-BX-APIKEY": API_KEY
     }
 
-    response = requests.post(url, headers=headers, data=params)
+    params["signature"] = signature
+
+    response = requests.post(url, data=params, headers=headers)
     return response.json()
 
 # Ruta webhook
