@@ -4,8 +4,8 @@ import requests
 
 app = Flask(__name__)
 
-API_KEY = os.environ.get("BINGX_API_KEY")
-API_SECRET = os.environ.get("BINGX_API_SECRET")
+API_KEY = os.environ.get("BINGX_API_KEY", "").strip()
+API_SECRET = os.environ.get("BINGX_API_SECRET", "").strip()
 BASE_URL = "https://open-api.bingx.com"
 SYMBOL = "ADA-USDT"
 
@@ -38,7 +38,6 @@ def place_order(side):
     response = requests.post(url, headers=headers, data=params)
     return response.json()
 
-# Ruta webhook
 @app.route('/webhook', methods=['POST'])
 def webhook():
     data = request.json
@@ -51,6 +50,5 @@ def webhook():
         result = {"error": "Unknown action"}
     return jsonify(result)
 
-# Pornire aplicație (pentru Render)
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
