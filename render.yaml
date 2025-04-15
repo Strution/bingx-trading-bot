@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: bingx-trading-bot
+    env: python
+    buildCommand: ""
+    startCommand: python bingx_bot.py
+    envVars:
+      - key: BINGX_API_KEY
+        value: pune-aici-api-key
+      - key: BINGX_API_SECRET
+        value: pune-aici-secretul
