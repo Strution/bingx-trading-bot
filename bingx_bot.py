@@ -31,7 +31,11 @@ def place_order(side):
     }
 
     params['signature'] = sign(params)
-    headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+    headers = {
+    'Content-Type': 'application/x-www-form-urlencoded',
+    'X-BX-APIKEY': API_KEY
+}
+
 
     response = requests.post(url, data=params, headers=headers)
     return response.json()
